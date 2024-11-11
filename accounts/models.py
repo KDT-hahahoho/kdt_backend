@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 # Create your models here.
 class User(AbstractUser):
-    identification = models.TextField(unique=True, default='010101-1')
+    identification = models.TextField(default='010101-1')
     gender = models.CharField(max_length=10, default='M')
     created_at = models.DateTimeField(auto_now_add=True)
 
