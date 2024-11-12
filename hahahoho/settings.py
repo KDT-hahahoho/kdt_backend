@@ -30,7 +30,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
   env("IP"),
-  env("DB_IP")
+  env("DB_IP"),
+  'localhost',
+  '127.0.0.1'
 ]
 
 
@@ -68,7 +70,9 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:8000',
     'http://localhost:8000'
 ]
-CORS_ALLOW_ALL_ORIGINS = True #(모든 포트 허용)
+CORS_ALLOW_ALL_ORIGINS = [
+  "https://wishforkorean.netlify.app/home"
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
