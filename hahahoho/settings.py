@@ -62,7 +62,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
-    f'http://{env("IP")}:{env("PORT")}',
+    f'http://{env("IP")}:8000',
     'http://127.0.0.1:5173',
     'http://localhost:5173',
     'http://127.0.0.1:8000',
