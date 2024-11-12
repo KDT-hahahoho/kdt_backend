@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'infertilitytests',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,7 +59,20 @@ REST_FRAMEWORK = {
     ],
 }
 
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+    f'http://{env("IP")}:{env("PORT")}',
+    'http://127.0.0.1:5173',
+    'http://localhost:5173',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000'
+]
+CORS_ALLOW_ALL_ORIGINS = True #(모든 포트 허용)
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
