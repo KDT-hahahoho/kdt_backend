@@ -70,9 +70,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:8000',
     'http://localhost:8000'
 ]
-CORS_ALLOW_ALL_ORIGINS = [
-  "https://wishforkorean.netlify.app/home"
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
