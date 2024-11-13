@@ -32,7 +32,9 @@ ALLOWED_HOSTS = [
   env("IP"),
   env("DB_IP"),
   'localhost',
-  '127.0.0.1'
+  '127.0.0.1',
+  'wishkr.site',
+  'www.wishkr.site'
 ]
 
 
