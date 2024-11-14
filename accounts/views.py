@@ -83,6 +83,7 @@ def login(request):
             "result": {
                 "email": user.email,
                 "memberId": user.pk,
+                "username": user.username,
                 "gender": user.gender,
                 "token": token.key
             }
@@ -126,8 +127,13 @@ def register_couple(request):
             return Response({"error": "요청한 사용자 정보가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
         
         if requesting_user.gender == 'W':
+            if Couple.objects.filter(wife=requesting_user) or Couple.objects.filter(husband=spouse_user):
+                return Response({"error": "이미 사용자 정보가 존재합니다."})
             couple = Couple.objects.create(wife=requesting_user, husband=spouse_user)
+
         elif requesting_user.gender == 'M':
+            if Couple.objects.filter(husband=requesting_user) or Couple.objects.filter(wife=spouse_user):
+                return Response({"error": "이미 사용자 정보가 존재합니다"})
             couple = Couple.objects.create(wife=spouse_user, husband=requesting_user,)
         else:
             return Response({"error": "성별 정보가 올바르지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
