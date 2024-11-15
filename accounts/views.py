@@ -52,7 +52,8 @@ def signup(request):
         user = serializer.save()
         response_data = {
             "success": True,
-            "memberId": user.pk
+            "memberId": user.pk,
+            "username": user.username
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -85,6 +86,7 @@ def login(request):
                 "memberId": user.pk,
                 "username": user.username,
                 "gender": user.gender,
+                "is_infertility": user.is_infertility,
                 "token": token.key
             }
         }

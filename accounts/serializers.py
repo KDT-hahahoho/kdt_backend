@@ -8,7 +8,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'identification', 'gender']
+        fields = ['username', 'email', 'password', 'identification', 'gender', 'is_infertility']
         extra_kwargs = {
             'password': {'write_only': True} # 쓰기 전용
         }
@@ -20,7 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
                 email=validated_data['email'],
                 identification=validated_data['identification'],
                 gender=validated_data['gender'],
-                age=validated_data['age']
+                age=validated_data['age'],
+                is_infertility=validated_data['is_infertility']
             )
             user.set_password(validated_data['password'])
             user.save()

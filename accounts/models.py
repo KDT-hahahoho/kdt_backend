@@ -5,6 +5,7 @@ from django.conf import settings
 class User(AbstractUser):
     identification = models.TextField(default='010101-1')
     gender = models.CharField(max_length=10, default='M')
+    is_infertility = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
