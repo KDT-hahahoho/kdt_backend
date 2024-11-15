@@ -98,7 +98,8 @@ def handle_infertility_tests(request):
         if is_empty_test_result(serializer):
             response_data = {
                 "success": True,
-                "message": EMPTY_RESULT_MESSAGE
+                "message": EMPTY_RESULT_MESSAGE,
+                "result": []
             }
             return Response(response_data, status=status.HTTP_204_NO_CONTENT)
         

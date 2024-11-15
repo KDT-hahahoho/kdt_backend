@@ -91,7 +91,8 @@ def handle_counsel_record(request):
         if is_empty_counsel(serializer):
             response_data = {
                 "success": True,
-                "message": EMPTY_RESULT_MESSAGE
+                "message": EMPTY_RESULT_MESSAGE,
+                "result": [],
             }
             return Response(response_data)
         response_data = {

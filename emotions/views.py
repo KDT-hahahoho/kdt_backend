@@ -227,7 +227,8 @@ def handle_interest(request):
         if is_empty_interest(serializer):
             response_data = {
                 "success": True,
-                "message": EMPTY_RESULT_MESSAGE
+                "message": EMPTY_RESULT_MESSAGE,
+                "result": []
             }
             return Response(response_data)
         
