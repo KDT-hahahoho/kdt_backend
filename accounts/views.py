@@ -238,10 +238,10 @@ def couple_data(request):
     spouse_inf_tests = Infertility.objects.filter(member_id=spouse).order_by('-created_at')[:7]  # 최근 7개 데이터
 
     # 직렬화
-    my_emotion_serialized = EmotionSerializers(my_emotion).data
-    my_inf_tests_serialized = InfertilitySerializer(my_inf_tests, many=True).data
-    spouse_emotion_serialized = EmotionSerializers(spouse_emotion).data
-    spouse_inf_tests_serialized = InfertilitySerializer(spouse_inf_tests, many=True).data
+    my_emotion_serialized = EmotionSerializers(my_emotion).data if my_emotion else {}
+    my_inf_tests_serialized = InfertilitySerializer(my_inf_tests, many=True).data if my_inf_tests else []
+    spouse_emotion_serialized = EmotionSerializers(spouse_emotion).data if spouse_emotion else {}
+    spouse_inf_tests_serialized = InfertilitySerializer(spouse_inf_tests, many=True).data if spouse_inf_tests else []
 
     # 응답 데이터 구성
     response_data = {
