@@ -71,13 +71,15 @@ CORS_ALLOWED_ORIGINS = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   # 'http://localhost:8000',
-  'http://127.0.0.1:8000',
+  # 'http://127.0.0.1:8000',
   'https://wishkr.site',
   'https://wish-test.netlify.app'
 ]
 
 
 CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
