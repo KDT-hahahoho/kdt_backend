@@ -46,17 +46,41 @@ from drf_yasg.utils import swagger_auto_schema
         400: openapi.Response(description="유효성 검사 실패")
     }
 )
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 def handle_emotion(request):
-    serializer = EmotionSerializers(data=request.data)
+    
+    if request.method == 'POST':
+        serializer = EmotionSerializers(data=request.data)
 
-    if serializer.is_valid(raise_exception=True):
-        serializer.save()
-        response_data = {
-            "success": True,
-            "result": serializer.data
-        }
-        return Response(response_data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            response_data = {
+                "success": True,
+                "result": serializer.data
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+    
+    elif request.method == 'GET':
+        member_id = request.query_params.get('member_id')
+        emotion = Emotion.objects.filter(member_id=member_id).order_by('-created_at').first()
+
+        if emotion:
+            serializer = EmotionSerializers(emotion)
+
+            response_data = {
+                "success": True,
+                "result": {
+                    "totalRecords": serializer.data
+                }
+            }
+        else:
+            response_data = {
+                "success": False,
+                "message": "등록된 감정 기록이 없습니다.",
+            }
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
 
 
 
