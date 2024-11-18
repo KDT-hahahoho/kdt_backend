@@ -36,7 +36,8 @@ ALLOWED_HOSTS = [
   'localhost',
   '127.0.0.1',
   'wishkr.site',
-  'www.wishkr.site'
+  'www.wishkr.site',
+  'https://wish-test.netlify.app'
 ]
 
 
