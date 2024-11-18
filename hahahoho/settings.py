@@ -37,7 +37,7 @@ ALLOWED_HOSTS = [
   '127.0.0.1',
   'wishkr.site',
   'www.wishkr.site',
-  'https://wish-test.netlify.app'
+  'wish-test.netlify.app'
 ]
 
 
@@ -74,6 +74,27 @@ CORS_ALLOWED_ORIGINS = [
   # 'http://127.0.0.1:8000',
   'https://wishkr.site',
   'https://wish-test.netlify.app'
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
 
 
