@@ -226,18 +226,23 @@ def register_couple(request):
 @permission_classes([IsAuthenticated])
 def couple_data(request):
     user = request.user
-    couple = get_object_or_404(Couple, wife=user) if user.gender == 'F' else get_object_or_404(Couple, husband=user)
+
+    if user.gender == 'M':
+        couple = get_object_or_404(Couple, husband=user)
+        spouse = couple.wife
+    
+    elif user.gender == 'W':
+        couple = get_object_or_404(Couple, wife=user)
+        spouse = couple.husband
 
     # 나의 데이터
-    my_emotion = Emotion.objects.filter(member_id=user).last()  # 가장 최근 감정 데이터
-    my_inf_tests = Infertility.objects.filter(member_id=user).order_by('-created_at')[:7]  # 최근 7개 데이터
+    my_emotion = Emotion.objects.filter(member_id=user).last() 
+    my_inf_tests = Infertility.objects.filter(member_id=user).order_by('-created_at')[:7]
 
     # 배우자의 데이터
-    spouse = couple.husband if user.gender == 'F' else couple.wife
     spouse_emotion = Emotion.objects.filter(member_id=spouse).last()
-    spouse_inf_tests = Infertility.objects.filter(member_id=spouse).order_by('-created_at')[:7]  # 최근 7개 데이터
+    spouse_inf_tests = Infertility.objects.filter(member_id=spouse).order_by('-created_at')[:7]
 
-    # 직렬화
     my_emotion_serialized = EmotionSerializers(my_emotion).data if my_emotion else {}
     my_inf_tests_serialized = InfertilitySerializer(my_inf_tests, many=True).data if my_inf_tests else []
     spouse_emotion_serialized = EmotionSerializers(spouse_emotion).data if spouse_emotion else {}
