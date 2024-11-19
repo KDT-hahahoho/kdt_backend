@@ -169,12 +169,27 @@ def is_empty_test_result(serializer):
 )
 @api_view(['GET'])
 def inferlitily_detail(request, test_pk):
+    member_id = request.query_params.get('member_id')
+    member_test = Infertility.objects.filter(member_id=member_id).order_by('-created_at')
+    if member_test.count() > 1:
+        before_test = member_test[1]
+    else: 
+        before_test = None
+    
     try:
         test = Infertility.objects.get(pk=test_pk)
-        before_test = Infertility.objects.get(pk=test_pk-1)
     except Infertility.DoesNotExist:
         return Response({"message": "테스트 정보가 없습니다."})
     serializer = InfertilitySerializer(test)
+
+    if before_test is None:
+        return Response({
+            "success": True,
+            "result": {
+                "current_test": serializer.data,
+                "before_test": []
+            }
+        })
     before_test_serializer = InfertilitySerializer(before_test)
 
     resposne_data = {
