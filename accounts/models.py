@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 # Create your models here.
 class User(AbstractUser):
+    username = models.CharField(max_length=150, unique=False)
     identification = models.TextField(default='010101-1')
     gender = models.CharField(max_length=10, default='M')
     is_infertility = models.BooleanField()

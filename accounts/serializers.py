@@ -33,11 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("해당 이메일로 가입된 계정이 이미 있습니다.")
         return value
     
-    def validate_identification(self, value):
-        if User.objects.filter(identification=value).exists():
-            raise serializers.ValidationError("해당 주민번호로 가입된 계정이 이미 있습니다.")
-        return value
-    
 
 class CoupleSerializer(serializers.ModelSerializer):
     class Meta:
