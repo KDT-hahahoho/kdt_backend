@@ -298,34 +298,52 @@ def get_missions(request):
         spouse = couple.husband
 
     today = timezone.now()
+    day_list = ['SUN', 'MON', 'TUE', "WED", 'THU', 'FRI', 'SAT']
+    user_missions_list = {day: [] for day in day_list}
+    spouse_missions_list = {day: [] for day in day_list}
+
     start_of_week = today - timedelta(days=today.weekday()+1)
     end_of_week = start_of_week + timedelta(days=6)    
-
 
     # 사용자의 7일간 감정 기록 중, 'is_complement'만 뽑기
     user_missions = Emotion.objects.filter(
         member_id=user, 
         created_at__range = (start_of_week, end_of_week)
-    ).values('is_complement')
+    ).values('is_complement', 'created_at')
 
     # 배우자의 7일간 감정 기록 중, 'is_complement'만 뽑기
     spouse_missions = Emotion.objects.filter(
         member_id=spouse, 
         created_at__range = (start_of_week, end_of_week)
-    ).values('is_complement')
+    ).values('is_complement', 'created_at')
 
-    user_missions_list = list(user_missions)
-    spouse_missions_list = list(spouse_missions)
+    for mission in user_missions:
+        # print(mission)
+        created_at = mission['created_at']
+        format_date = created_at.strftime('%Y-%m-%d')
+        day_of_week = created_at.strftime('%a').upper()
+        if day_of_week in day_list:
+            user_missions_list[day_of_week].append({
+                'is_complement': mission['is_complement'],
+                'created_at': f"{format_date}, {day_of_week}" 
+            })
+    
+        # 배우자 미션 데이터 요일에 맞게 짝짓기
+    for mission in spouse_missions:
+        # print(mission)
+        created_at = mission['created_at']
+        format_date = created_at.strftime('%Y-%m-%d')
+        day_of_week = created_at.strftime('%a').upper() 
+        if day_of_week in day_list:
+            spouse_missions_list[day_of_week].append({
+                'is_complement': mission['is_complement'],
+                'created_at': f"{format_date}, {day_of_week}" 
+            })
 
-    user_serializer = MissionSerializers(data=user_missions_list, many=True)
-    spouse_serializer = MissionSerializers(data=spouse_missions_list, many=True)
+    # print(user_missions_list)
+    # print(spouse_missions_list)
 
-    if user_serializer.is_valid() and spouse_serializer.is_valid():
-        return Response({
-            'user_is_complement': user_serializer.data,
-            'spouse_is_complement': spouse_serializer.data
-        }, status=status.HTTP_200_OK)
-    else:
-        return Response({
-            'error': 'Invalid data'
-        }, status=status.HTTP_400_BAD_REQUEST)
+    return Response({
+        'user_is_complement': user_missions_list,
+        'spouse_is_complement': spouse_missions_list
+    }, status=status.HTTP_200_OK)
