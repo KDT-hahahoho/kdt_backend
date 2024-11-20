@@ -11,3 +11,8 @@ class InterestSerializers(serializers.ModelSerializer):
         model = Interest
         fields = '__all__'
 
+
+class MissionSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Emotion
+        fields = ('is_complement', )

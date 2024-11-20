@@ -2,9 +2,13 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import Response
+from datetime import timedelta
+from django.utils import timezone
 
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from .models import Emotion, Interest
-from .serializers import EmotionSerializers, InterestSerializers
+from .serializers import EmotionSerializers, InterestSerializers, MissionSerializers
+from accounts.models import User, Couple
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -277,3 +281,51 @@ def handle_interest(request):
 def is_empty_interest(serializer):
     return len(serializer.data) == 0
 
+
+@api_view(['GET', 'POST'])
+def get_missions(request):
+    # 나의 7일 동안의 'is_complement' 값
+    # 내 커플의 7일 동안의 'is_complement' 값
+    member_id = request.query_params.get('member_id')
+    user = get_object_or_404(User, id=member_id)
+
+    if user.gender == 'M':
+        # 사용자가 남자면 배우자는 여자
+        couple = get_object_or_404(Couple, husband=user)
+        spouse = couple.wife
+    else:
+        couple = get_object_or_404(Couple, wife=user)
+        spouse = couple.husband
+
+    today = timezone.now()
+    start_of_week = today - timedelta(days=today.weekday()+1)
+    end_of_week = start_of_week + timedelta(days=6)    
+
+
+    # 사용자의 7일간 감정 기록 중, 'is_complement'만 뽑기
+    user_missions = Emotion.objects.filter(
+        member_id=user, 
+        created_at__range = (start_of_week, end_of_week)
+    ).values('is_complement')
+
+    # 배우자의 7일간 감정 기록 중, 'is_complement'만 뽑기
+    spouse_missions = Emotion.objects.filter(
+        member_id=spouse, 
+        created_at__range = (start_of_week, end_of_week)
+    ).values('is_complement')
+
+    user_missions_list = list(user_missions)
+    spouse_missions_list = list(spouse_missions)
+
+    user_serializer = MissionSerializers(data=user_missions_list, many=True)
+    spouse_serializer = MissionSerializers(data=spouse_missions_list, many=True)
+
+    if user_serializer.is_valid() and spouse_serializer.is_valid():
+        return Response({
+            'user_is_complement': user_serializer.data,
+            'spouse_is_complement': spouse_serializer.data
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({
+            'error': 'Invalid data'
+        }, status=status.HTTP_400_BAD_REQUEST)
